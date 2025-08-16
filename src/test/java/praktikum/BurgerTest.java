@@ -124,5 +124,4 @@ public class BurgerTest {
 
         assertEquals(expectedReceipt, burger.getReceipt());
     }
-
 }
