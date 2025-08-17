@@ -21,6 +21,8 @@ public class LoginTest extends BaseTest{
         GenerateUser();
     }
 
+
+
     @Test
     @DisplayName("Вход через кнопку 'Войти в аккаунт' на главной")
     public void testLoginViaMainPageLoginButton() {
@@ -28,6 +30,10 @@ public class LoginTest extends BaseTest{
         mainPage.clickLoginButton();
 
         LoginPage loginPage = new LoginPage(driver);
+        loginPage.setEmail(email);
+        loginPage.setPassword(password);
+        loginPage.clickLoginButton();
+
         loginPage.setEmail(email);
         loginPage.setPassword(password);
         loginPage.clickLoginButton();
@@ -89,6 +95,8 @@ public class LoginTest extends BaseTest{
 
     @After
     public void tearDown() {
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }

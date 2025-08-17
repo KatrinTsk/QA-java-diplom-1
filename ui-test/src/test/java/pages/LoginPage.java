@@ -12,7 +12,7 @@ public class LoginPage {
     // Локаторы элементов
     private final By emailInput = By.xpath(".//input[@name='name']");
     private final By passwordInput = By.xpath(".//input[@name='Пароль']");
-    private final By loginButton = By.xpath(".//button[text()='Войти']");
+    private final By loginButton = By.xpath(".//button[contains(@class, 'button_button__33qZ0') and text()='Войти']");
     private final By registerLink = By.xpath(".//a[text()='Зарегистрироваться']");
     private final By recoverPasswordLink = By.xpath(".//a[text()='Восстановить пароль']");
     private final By loginHeader = By.xpath(".//h2[text()='Вход']");

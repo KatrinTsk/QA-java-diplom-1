@@ -11,7 +11,7 @@ public class MainPage {
     private final WebDriver driver;
 
     // Локаторы элементов
-    private final By loginButton = By.xpath(".//button[text()='Войти в аккаунт']");
+    private final By loginButton = By.xpath(".//button[contains(@class, 'button_button_type_primary')]");
     private final By personalAccountButton = By.xpath(".//p[text()='Личный Кабинет']");
     private final By orderButton = By.xpath(".//button[text()='Оформить заказ']");
     private final By bunsSection = By.xpath(".//span[text()='Булки']/..");
