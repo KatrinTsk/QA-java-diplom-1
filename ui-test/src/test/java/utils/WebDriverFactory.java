@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,10 +15,6 @@ public class WebDriverFactory {
         WebDriver driver;
 
         switch (browser) {
-            case "firefox":
-                WebDriverManager.firefoxdriver().setup();
-                driver = new FirefoxDriver();
-                break;
             case "yandex":
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions yandexOptions = new ChromeOptions();
@@ -31,6 +26,7 @@ public class WebDriverFactory {
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions options = new ChromeOptions();
                 options.addArguments("--remote-allow-origins=*");
+                //options.addArguments("--user-data-dir=/path/to/new/profile");
                 driver = new ChromeDriver(options);
         }
 

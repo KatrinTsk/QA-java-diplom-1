@@ -19,7 +19,6 @@ public class MainPage {
     private final By fillingsSection = By.xpath(".//span[text()='Начинки']/..");
     private final By selectedSection = By.xpath(".//div[contains(@class, 'tab_tab_type_current')]");
     private final By constructorHeader = By.xpath(".//h1[text()='Соберите бургер']");
-
     public MainPage(WebDriver driver) {
         this.driver = driver;
     }

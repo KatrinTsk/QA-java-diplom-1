@@ -6,12 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 import pages.MainPage;
 import utils.WebDriverFactory;
+import io.qameta.allure.Step;
 
 import static org.junit.Assert.assertEquals;
 
 public class ConstructorTest extends BaseTest {
 
     @Before
+    @Step("Инициализация драйвера и открытие главной страницы")
     public void setUp() {
         driver = WebDriverFactory.createDriver();
         driver.get("https://stellarburgers.nomoreparties.site/");
@@ -21,32 +23,58 @@ public class ConstructorTest extends BaseTest {
     @DisplayName("Проверка перехода к разделу 'Булки'")
     public void testNavigateToBunsSection() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.clickSaucesSection(); // Сначала переходим в другой раздел
-        mainPage.clickBunsSection();
 
-        assertEquals("Булки", mainPage.getSelectedSectionText());
+        navigateToSaucesSection(mainPage);
+        navigateToBunsSection(mainPage);
+
+        verifySectionText(mainPage, "Булки");
     }
 
     @Test
     @DisplayName("Переход к разделу 'Соусы'")
     public void testNavigateToSaucesSection() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.clickSaucesSection();
 
-        assertEquals("Соусы", mainPage.getSelectedSectionText());
+        navigateToSaucesSection(mainPage);
+
+        verifySectionText(mainPage, "Соусы");
     }
 
     @Test
     @DisplayName("Переход к разделу 'Начинки'")
     public void testNavigateToFillingsSection() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.clickFillingsSection();
 
-        assertEquals("Начинки", mainPage.getSelectedSectionText());
+        navigateToFillingsSection(mainPage);
+
+        verifySectionText(mainPage, "Начинки");
+    }
+
+    @Step("Переход в раздел 'Соусы'")
+    private void navigateToSaucesSection(MainPage mainPage) {
+        mainPage.clickSaucesSection();
+    }
+
+    @Step("Переход в раздел 'Булки'")
+    private void navigateToBunsSection(MainPage mainPage) {
+        mainPage.clickBunsSection();
+    }
+
+    @Step("Переход в раздел 'Начинки'")
+    private void navigateToFillingsSection(MainPage mainPage) {
+        mainPage.clickFillingsSection();
+    }
+
+    @Step("Проверка текста выбранного раздела (ожидаемый: {expectedText})")
+    private void verifySectionText(MainPage mainPage, String expectedText) {
+        assertEquals(expectedText, mainPage.getSelectedSectionText());
     }
 
     @After
+    @Step("Закрытие драйвера")
     public void tearDown() {
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
