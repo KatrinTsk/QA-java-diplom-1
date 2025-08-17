@@ -2,9 +2,6 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
 
 public class LoginPage {
     private final WebDriver driver;
@@ -43,20 +40,6 @@ public class LoginPage {
         driver.findElement(recoverPasswordLink).click();
     }
 
-    // Методы получения элементов (геттеры)
-
-    public By getLoginButton() {
-        return loginButton;
-    }
-
-    public By getEmailInput() {
-        return emailInput;
-    }
-
-    public By getPasswordInput() {
-        return passwordInput;
-    }
-
     // Методы проверок состояния
 
     public boolean isLoginPageDisplayed() {
@@ -65,16 +48,5 @@ public class LoginPage {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public boolean isLoginButtonEnabled() {
-        return driver.findElement(loginButton).isEnabled();
-    }
-
-    // Методы ожидания
-
-    public void waitUntilLoginPageIsLoaded() {
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(loginHeader));
     }
 }
