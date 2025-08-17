@@ -1,10 +1,10 @@
 package utils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,9 +16,14 @@ public class WebDriverFactory {
 
         switch (browser) {
             case "yandex":
-                WebDriverManager.chromedriver().setup();
+                // Автоматически определяем совместимую версию ChromeDriver
+                WebDriverManager.getInstance(DriverManagerType.CHROME).browserVersionDetectionCommand(
+                        "C:/Users/ekaka/AppData/Local/Yandex/YandexBrowser/Application/browser.exe --version"
+                ).setup();
                 ChromeOptions yandexOptions = new ChromeOptions();
-                yandexOptions.setBinary("путь/к/yandex/browser.exe");
+                yandexOptions.setBinary("C:/Users/ekaka/AppData/Local/Yandex/YandexBrowser/Application/browser.exe");
+                yandexOptions.addArguments("--remote-allow-origins=*");
+                yandexOptions.addArguments("--start-maximized");
                 driver = new ChromeDriver(yandexOptions);
                 break;
             case "chrome":
