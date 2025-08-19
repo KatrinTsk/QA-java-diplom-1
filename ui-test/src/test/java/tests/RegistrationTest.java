@@ -3,16 +3,11 @@ package tests;
 import io.qameta.allure.*;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LoginPage;
 import pages.MainPage;
 import pages.RegistrationPage;
-
-import java.time.Duration;
 
 import static org.junit.Assert.*;
 
@@ -95,21 +90,18 @@ public class RegistrationTest extends BaseTest {
 
     @Step("Проверка успешной регистрации (переход на страницу входа)")
     private void checkSuccessfulRegistration(LoginPage loginPage) {
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.urlContains("/login"));
+        loginPage.isLoginPageUrl();
         attachScreenshot("Страница входа после успешной регистрации");
         assertTrue(loginPage.isLoginPageDisplayed());
     }
 
     @Step("Проверка неудачной регистрации (ожидаемая ошибка валидации пароля)")
     private void checkFailedRegistration(RegistrationPage registrationPage) {
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//p[contains(text(), 'Некорректный пароль')]")));
+        registrationPage.waitForPasswordErrorDisplayed();
         attachScreenshot("Форма регистрации - отображение ошибки");
 
         assertTrue("Должны остаться на странице регистрации",
-                driver.getCurrentUrl().contains("/register"));
+                registrationPage.isRegistrationPage());
 
         String errorText = registrationPage.getPasswordErrorText();
         assertNotNull("Сообщение об ошибке должно отображаться", errorText);

@@ -1,19 +1,14 @@
-// ConstructorTest.java
 package tests;
 
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.MainPage;
 import io.qameta.allure.Step;
 
-import java.time.Duration;
-
 import static org.junit.Assert.assertEquals;
 
-public class ConstructorTest extends BaseTestWithoutAuth { // Изменили наследование
+public class ConstructorTest extends BaseTestWithoutAuth {
 
     private MainPage mainPage;
 
@@ -21,12 +16,7 @@ public class ConstructorTest extends BaseTestWithoutAuth { // Изменили �
     @Step("Дополнительная настройка для конструктора")
     public void setUpConstructor() {
         mainPage = new MainPage(driver);
-
-        // Явное ожидание загрузки конструктора
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOfElementLocated(
-                        mainPage.getSelectedSectionLocator()
-                ));
+        mainPage.waitForConstructorLoaded();
     }
 
     @Test
@@ -51,8 +41,8 @@ public class ConstructorTest extends BaseTestWithoutAuth { // Изменили �
         assertEquals("Булки", mainPage.getSelectedSectionText());
 
         // Клик с ожиданием
-        new WebDriverWait(driver, Duration.ofSeconds(10));
         mainPage.clickSaucesSection();
+        waitForSectionToLoad("Соусы");
 
         // Проверка с очисткой текста
         String actualText = mainPage.getSelectedSectionText().trim();
@@ -86,9 +76,7 @@ public class ConstructorTest extends BaseTestWithoutAuth { // Изменили �
 
     @Step("Ожидание загрузки раздела: {sectionName}")
     private void waitForSectionToLoad(String sectionName) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.textToBePresentInElementLocated(
-                        mainPage.getSelectedSectionLocator(), sectionName));
+        mainPage.waitForSectionLoaded(sectionName);
     }
 
     @Step("Проверка текста выбранного раздела (ожидаемый: {expectedText})")

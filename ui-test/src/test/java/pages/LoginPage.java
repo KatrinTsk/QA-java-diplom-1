@@ -2,6 +2,9 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
 public class LoginPage {
     private final WebDriver driver;
@@ -19,7 +22,6 @@ public class LoginPage {
     }
 
     // Методы взаимодействия с элементами
-
     public void setEmail(String email) {
         driver.findElement(emailInput).sendKeys(email);
     }
@@ -41,12 +43,16 @@ public class LoginPage {
     }
 
     // Методы проверок состояния
-
     public boolean isLoginPageDisplayed() {
         try {
             return driver.findElement(loginHeader).isDisplayed();
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public boolean isLoginPageUrl() {
+        return new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.urlContains("/login"));
     }
 }

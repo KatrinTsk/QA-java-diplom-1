@@ -19,6 +19,7 @@ public class MainPage {
     private final By fillingsSection = By.xpath(".//span[text()='Начинки']/..");
     private final By selectedSection = By.xpath(".//div[contains(@class, 'tab_tab_type_current')]");
     private final By constructorHeader = By.xpath(".//h1[text()='Соберите бургер']");
+
     public MainPage(WebDriver driver) {
         this.driver = driver;
     }
@@ -49,7 +50,6 @@ public class MainPage {
     }
 
     // Методы проверок состояния
-
     public boolean isOrderButtonDisplayed() {
         try {
             return driver.findElement(orderButton).isDisplayed();
@@ -59,8 +59,18 @@ public class MainPage {
     }
 
     public String getSelectedSectionText() {
-        new WebDriverWait(driver, Duration.ofSeconds(3))
-                .until(ExpectedConditions.visibilityOfElementLocated(selectedSection));
+        waitForConstructorLoaded();
         return driver.findElement(selectedSection).getText();
+    }
+
+    public void waitForConstructorLoaded() {
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOfElementLocated(selectedSection));
+    }
+
+    public void waitForSectionLoaded(String sectionName) {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.textToBePresentInElementLocated(
+                        selectedSection, sectionName));
     }
 }
