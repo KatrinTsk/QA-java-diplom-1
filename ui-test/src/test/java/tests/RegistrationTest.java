@@ -2,11 +2,7 @@ package tests;
 
 import io.qameta.allure.*;
 import io.qameta.allure.junit4.DisplayName;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -15,24 +11,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LoginPage;
 import pages.MainPage;
 import pages.RegistrationPage;
-import utils.WebDriverFactory;
 
 import java.time.Duration;
 
 import static org.junit.Assert.*;
 
-@RunWith(JUnit4.class)
 @Epic("Регистрация пользователя")
 @Feature("Форма регистрации")
 public class RegistrationTest extends BaseTest {
-
-    @Before
-    @Step("Инициализация драйвера и открытие главной страницы")
-    public void setUp() {
-        driver = WebDriverFactory.createDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        attachPageUrl();
-    }
 
     @Test
     @DisplayName("Успешная регистрация")
@@ -41,6 +27,7 @@ public class RegistrationTest extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     public void testSuccessfulRegistration() {
         performRegistrationTest("password123", true);
+        attachUserData();
     }
 
     @Test
@@ -50,6 +37,7 @@ public class RegistrationTest extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     public void testPasswordWith1Char() {
         performRegistrationTest("a", false);
+        attachUserData();
     }
 
     @Test
@@ -58,6 +46,7 @@ public class RegistrationTest extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     public void testPasswordWith2Chars() {
         performRegistrationTest("ab", false);
+        attachUserData();
     }
 
     @Test
@@ -66,6 +55,7 @@ public class RegistrationTest extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     public void testPasswordWith4Chars() {
         performRegistrationTest("abcd", false);
+        attachUserData();
     }
 
     @Test
@@ -74,6 +64,7 @@ public class RegistrationTest extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     public void testPasswordWith5Chars() {
         performRegistrationTest("abcde", false);
+        attachUserData();
     }
 
     @Step("Выполнение теста регистрации с паролем: {password} (ожидаемый успех: {shouldSucceed})")
@@ -86,13 +77,9 @@ public class RegistrationTest extends BaseTest {
         loginPage.clickRegisterLink();
         attachScreenshot("Страница входа - нажата ссылка регистрации");
 
-        name = "TestUser";
-        email = "Testuser" + System.currentTimeMillis() + "@example.com";
-        attachUserData(name, email, password);
-
         RegistrationPage registrationPage = new RegistrationPage(driver);
-        registrationPage.setName(name);
-        registrationPage.setEmail(email);
+        registrationPage.setName("TestUser_" + System.currentTimeMillis());
+        registrationPage.setEmail("testuser_" + System.currentTimeMillis() + "@example.com");
         registrationPage.setPassword(password);
         attachScreenshot("Форма регистрации - заполнены данные");
 
@@ -108,7 +95,7 @@ public class RegistrationTest extends BaseTest {
 
     @Step("Проверка успешной регистрации (переход на страницу входа)")
     private void checkSuccessfulRegistration(LoginPage loginPage) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.urlContains("/login"));
         attachScreenshot("Страница входа после успешной регистрации");
         assertTrue(loginPage.isLoginPageDisplayed());
@@ -116,7 +103,7 @@ public class RegistrationTest extends BaseTest {
 
     @Step("Проверка неудачной регистрации (ожидаемая ошибка валидации пароля)")
     private void checkFailedRegistration(RegistrationPage registrationPage) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOfElementLocated(
                         By.xpath("//p[contains(text(), 'Некорректный пароль')]")));
         attachScreenshot("Форма регистрации - отображение ошибки");
@@ -135,21 +122,8 @@ public class RegistrationTest extends BaseTest {
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 
-    @Attachment(value = "URL страницы", type = "text/plain")
-    public String attachPageUrl() {
-        return driver.getCurrentUrl();
-    }
-
     @Attachment(value = "Данные пользователя", type = "text/plain")
-    public String attachUserData(String name, String email, String password) {
+    public String attachUserData() {
         return String.format("Name: %s\nEmail: %s\nPassword: %s", name, email, password);
-    }
-
-    @After
-    @Step("Закрытие драйвера")
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
     }
 }

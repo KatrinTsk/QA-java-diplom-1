@@ -24,6 +24,9 @@ public class MainPage {
     }
 
     // Методы взаимодействия с элементами
+    public By getSelectedSectionLocator() {
+        return selectedSection;
+    }
 
     public void clickLoginButton() {
         driver.findElement(loginButton).click();

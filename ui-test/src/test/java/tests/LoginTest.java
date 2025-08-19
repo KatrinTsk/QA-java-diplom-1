@@ -2,14 +2,11 @@ package tests;
 
 import io.qameta.allure.*;
 import io.qameta.allure.junit4.DisplayName;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import pages.LoginPage;
 import pages.MainPage;
 import pages.PasswordRecoveryPage;
 import pages.RegistrationPage;
-import utils.WebDriverFactory;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
@@ -18,15 +15,6 @@ import static org.junit.Assert.assertTrue;
 @Epic("Авторизация пользователя")
 @Feature("Формы входа")
 public class LoginTest extends BaseTest {
-
-    @Before
-    public void setUp() {
-        driver = WebDriverFactory.createDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        attachPageUrl();
-        GenerateUser();
-        attachUserData(name, email, password);
-    }
 
     @Test
     @DisplayName("Вход через кнопку 'Войти в аккаунт' на главной")
@@ -38,7 +26,8 @@ public class LoginTest extends BaseTest {
         mainPage.clickLoginButton();
         attachScreenshot("Главная страница - нажата кнопка входа");
 
-        performLogin(mainPage);
+        performLogin();
+        attachUserData();
     }
 
     @Test
@@ -50,7 +39,8 @@ public class LoginTest extends BaseTest {
         mainPage.clickPersonalAccountButton();
         attachScreenshot("Главная страница - нажата кнопка личного кабинета");
 
-        performLogin(mainPage);
+        performLogin();
+        attachUserData();
     }
 
     @Test
@@ -70,7 +60,8 @@ public class LoginTest extends BaseTest {
         registrationPage.clickLoginLink();
         attachScreenshot("Страница регистрации - нажата ссылка входа");
 
-        performLogin(mainPage);
+        performLogin();
+        attachUserData();
     }
 
     @Test
@@ -90,11 +81,12 @@ public class LoginTest extends BaseTest {
         passwordRecoveryPage.clickLoginLink();
         attachScreenshot("Страница восстановления пароля - нажата ссылка входа");
 
-        performLogin(mainPage);
+        performLogin();
+        attachUserData();
     }
 
     @Step("Выполнение входа с email: {email} и паролем: {password}")
-    private void performLogin(MainPage mainPage) {
+    private void performLogin() {
         LoginPage loginPage = new LoginPage(driver);
 
         loginPage.setEmail(email);
@@ -104,6 +96,7 @@ public class LoginTest extends BaseTest {
         loginPage.clickLoginButton();
         attachScreenshot("Форма входа - нажата кнопка входа");
 
+        MainPage mainPage = new MainPage(driver);
         assertTrue("Кнопка 'Оформить заказ' должна отображаться после входа",
                 mainPage.isOrderButtonDisplayed());
         attachScreenshot("Главная страница после успешного входа");
@@ -114,20 +107,8 @@ public class LoginTest extends BaseTest {
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 
-    @Attachment(value = "URL страницы", type = "text/plain")
-    public String attachPageUrl() {
-        return driver.getCurrentUrl();
-    }
-
     @Attachment(value = "Данные пользователя", type = "text/plain")
-    public String attachUserData(String name, String email, String password) {
+    public String attachUserData() {
         return String.format("Name: %s\nEmail: %s\nPassword: %s", name, email, password);
-    }
-
-    @After
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
     }
 }

@@ -1,33 +1,55 @@
 package tests;
 
+import api.UserApiClient;
 import io.qameta.allure.Step;
+import io.restassured.response.Response;
+import org.junit.After;
+import org.junit.Before;
 import org.openqa.selenium.WebDriver;
-import pages.LoginPage;
-import pages.MainPage;
-import pages.RegistrationPage;
+import utils.WebDriverFactory;
 
 public class BaseTest {
+    protected WebDriver driver;
     protected String name;
     protected String email;
     protected String password;
-    protected WebDriver driver;
+    protected String accessToken;
 
-    @Step("Генерация тестового пользователя")
-    public void GenerateUser() {
-        MainPage mainPage = new MainPage(driver);
-        mainPage.clickLoginButton();
+    @Before
+    @Step("Создание тестового пользователя через API")
+    public void createTestUser() {
+        // Генерация уникальных данных
+        long timestamp = System.currentTimeMillis();
+        this.name = "User_" + timestamp;
+        this.email = "user_" + timestamp + "@example.com";
+        this.password = "password_" + timestamp;
 
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.clickRegisterLink();
+        // Создание пользователя через API
+        Response response = UserApiClient.createUser(email, password, name);
+        this.accessToken = response.then().extract().path("accessToken");
 
-        name = "TestUser";
-        email = "Testuser" + System.currentTimeMillis() + "@example.com";
-        password = "password123";
+        // Инициализация драйвера
+        this.driver = WebDriverFactory.createDriver();
+        driver.get("https://stellarburgers.nomoreparties.site/");
+    }
 
-        RegistrationPage registrationPage = new RegistrationPage(driver);
-        registrationPage.setName(name);
-        registrationPage.setEmail(email);
-        registrationPage.setPassword(password);
-        registrationPage.clickRegisterButton();
+    @After
+    @Step("Удаление тестового пользователя через API")
+    public void deleteTestUser() {
+        try {
+            if (accessToken != null) {
+                UserApiClient.deleteUser(accessToken);
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при удалении пользователя: " + e.getMessage());
+        } finally {
+            if (driver != null) {
+                try {
+                    driver.quit();
+                } catch (Exception e) {
+                    System.err.println("Ошибка при закрытии драйвера: " + e.getMessage());
+                }
+            }
+        }
     }
 }

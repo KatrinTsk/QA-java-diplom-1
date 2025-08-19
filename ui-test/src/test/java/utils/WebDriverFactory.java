@@ -30,8 +30,7 @@ public class WebDriverFactory {
             default:
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions options = new ChromeOptions();
-                options.addArguments("--remote-allow-origins=*");
-                //options.addArguments("--user-data-dir=/path/to/new/profile");
+                options.setBrowserVersion("stable"); // или конкретную версию
                 driver = new ChromeDriver(options);
         }
 
