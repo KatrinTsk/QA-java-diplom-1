@@ -23,10 +23,10 @@ public class BurgerTest {
     private Bun bun;
 
     @Mock
-    private Ingredient ingredient1;
+    private Ingredient firstIngredient;
 
     @Mock
-    private Ingredient ingredient2;
+    private Ingredient secondIngredient;
 
     private final String bunName;
     private final float bunPrice;
@@ -58,60 +58,64 @@ public class BurgerTest {
         when(bun.getName()).thenReturn(bunName);
         when(bun.getPrice()).thenReturn(bunPrice);
 
-        when(ingredient1.getType()).thenReturn(ingredientType);
-        when(ingredient1.getName()).thenReturn(ingredientName);
-        when(ingredient1.getPrice()).thenReturn(ingredientPrice);
+        when(firstIngredient.getType()).thenReturn(ingredientType);
+        when(firstIngredient.getName()).thenReturn(ingredientName);
+        when(firstIngredient.getPrice()).thenReturn(ingredientPrice);
 
-        when(ingredient2.getType()).thenReturn(IngredientType.SAUCE);
-        when(ingredient2.getName()).thenReturn("Майонез");
-        when(ingredient2.getPrice()).thenReturn(20.0f);
+        when(secondIngredient.getType()).thenReturn(IngredientType.SAUCE);
+        when(secondIngredient.getName()).thenReturn("Майонез");
+        when(secondIngredient.getPrice()).thenReturn(20.0f);
     }
 
     @Test
     public void testSetBuns() {
         burger.setBuns(bun);
-        assertEquals(bun, burger.bun);
+        assertEquals("Булочка должна быть установлена", bun, burger.bun);
     }
 
     @Test
     public void testAddIngredient() {
-        burger.addIngredient(ingredient1);
-        assertEquals(1, burger.ingredients.size());
-        assertEquals(ingredient1, burger.ingredients.get(0));
+        burger.addIngredient(firstIngredient);
+        assertEquals("Количество ингредиентов должно увеличиться", 1, burger.ingredients.size());
+        assertEquals("Добавленный ингредиент должен соответствовать", firstIngredient, burger.ingredients.get(0));
     }
 
     @Test
     public void testRemoveIngredient() {
-        burger.addIngredient(ingredient1);
-        burger.addIngredient(ingredient2);
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+
         burger.removeIngredient(0);
-        assertEquals(1, burger.ingredients.size());
-        assertEquals(ingredient2, burger.ingredients.get(0));
+
+        assertEquals("Количество ингредиентов должно уменьшиться", 1, burger.ingredients.size());
+        assertEquals("Оставшийся ингредиент должен быть правильным", secondIngredient, burger.ingredients.get(0));
     }
 
     @Test
-    public void testMoveIngredient() {
-        burger.addIngredient(ingredient1);
-        burger.addIngredient(ingredient2);
+    public void testMoveIngredientFromFirstToSecondPosition() {
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+
         burger.moveIngredient(0, 1);
-        assertEquals(ingredient2, burger.ingredients.get(0));
-        assertEquals(ingredient1, burger.ingredients.get(1));
+
+        assertEquals("Первый ингредиент должен измениться", secondIngredient, burger.ingredients.get(0));
+        assertEquals("Второй ингредиент должен измениться", firstIngredient, burger.ingredients.get(1));
     }
 
     @Test
-    public void testGetPrice() {
+    public void testGetPriceWithBunAndTwoIngredients() {
         burger.setBuns(bun);
-        burger.addIngredient(ingredient1);
-        burger.addIngredient(ingredient2);
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
 
         float expectedPrice = bunPrice * 2 + ingredientPrice + 20.0f;
-        assertEquals(expectedPrice, burger.getPrice(), 0.0f);
+        assertEquals("Цена должна быть рассчитана правильно", expectedPrice, burger.getPrice(), 0.0f);
     }
 
     @Test
-    public void testGetReceipt() {
+    public void testGetReceiptWithBunAndOneIngredient() {
         burger.setBuns(bun);
-        burger.addIngredient(ingredient1);
+        burger.addIngredient(firstIngredient);
 
         String expectedReceipt = String.format(
                 "(==== %s ====)%n= %s %s =%n(==== %s ====)%n%nPrice: %f%n",
@@ -122,6 +126,52 @@ public class BurgerTest {
                 bunPrice * 2 + ingredientPrice
         );
 
-        assertEquals(expectedReceipt, burger.getReceipt());
+        assertEquals("Чек должен быть сформирован правильно", expectedReceipt, burger.getReceipt());
+    }
+
+    @Test
+    public void testGetPriceWithOnlyBun() {
+        burger.setBuns(bun);
+
+        float expectedPrice = bunPrice * 2;
+        assertEquals("Цена только с булочками должна быть правильной", expectedPrice, burger.getPrice(), 0.0f);
+    }
+
+    @Test
+    public void testGetReceiptWithOnlyBun() {
+        burger.setBuns(bun);
+
+        String expectedReceipt = String.format(
+                "(==== %s ====)%n(==== %s ====)%n%nPrice: %f%n",
+                bunName,
+                bunName,
+                bunPrice * 2
+        );
+
+        assertEquals("Чек только с булочками должен быть правильным", expectedReceipt, burger.getReceipt());
+    }
+
+    @Test
+    public void testMoveIngredientToSamePosition() {
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+
+        List<Ingredient> originalOrder = List.copyOf(burger.ingredients);
+        burger.moveIngredient(0, 0);
+
+        assertEquals("Порядок ингредиентов не должен измениться при перемещении на ту же позицию",
+                originalOrder, burger.ingredients);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testRemoveIngredientWithInvalidIndex() {
+        burger.addIngredient(firstIngredient);
+        burger.removeIngredient(5);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testMoveIngredientWithInvalidIndex() {
+        burger.addIngredient(firstIngredient);
+        burger.moveIngredient(0, 5);
     }
 }
