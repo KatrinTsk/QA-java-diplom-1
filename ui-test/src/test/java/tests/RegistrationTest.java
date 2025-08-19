@@ -28,7 +28,7 @@ public class RegistrationTest extends BaseTest {
     @Test
     @DisplayName("Регистрация с паролем из 1 символа")
     @Story("Валидация пароля при регистрации")
-    @Description("Проверка отображения ошибки при вводе слишком короткого пароля")
+    @Description("Проверка отображения ошибки при вводе пароля длиной 1 символ") // ИЗМЕНЕНО: добавлен @Description
     @Severity(SeverityLevel.CRITICAL)
     public void testPasswordWith1Char() {
         performRegistrationTest("a", false);
@@ -38,6 +38,7 @@ public class RegistrationTest extends BaseTest {
     @Test
     @DisplayName("Регистрация с паролем из 2 символов")
     @Story("Валидация пароля при регистрации")
+    @Description("Проверка отображения ошибки при вводе пароля длиной 2 символа") // ИЗМЕНЕНО: добавлен @Description
     @Severity(SeverityLevel.CRITICAL)
     public void testPasswordWith2Chars() {
         performRegistrationTest("ab", false);
@@ -47,6 +48,7 @@ public class RegistrationTest extends BaseTest {
     @Test
     @DisplayName("Регистрация с паролем из 4 символов")
     @Story("Валидация пароля при регистрации")
+    @Description("Проверка отображения ошибки при вводе пароля длиной 4 символа") // ИЗМЕНЕНО: добавлен @Description
     @Severity(SeverityLevel.NORMAL)
     public void testPasswordWith4Chars() {
         performRegistrationTest("abcd", false);
@@ -56,6 +58,7 @@ public class RegistrationTest extends BaseTest {
     @Test
     @DisplayName("Регистрация с паролем из 5 символов")
     @Story("Валидация пароля при регистрации")
+    @Description("Проверка отображения ошибки при вводе пароля длиной 5 символов") // ИЗМЕНЕНО: добавлен @Description
     @Severity(SeverityLevel.NORMAL)
     public void testPasswordWith5Chars() {
         performRegistrationTest("abcde", false);

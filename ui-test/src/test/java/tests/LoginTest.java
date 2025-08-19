@@ -3,12 +3,12 @@ package tests;
 import io.qameta.allure.*;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import pages.LoginPage;
 import pages.MainPage;
 import pages.PasswordRecoveryPage;
 import pages.RegistrationPage;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 
 import static org.junit.Assert.assertTrue;
 
@@ -19,7 +19,7 @@ public class LoginTest extends BaseTest {
     @Test
     @DisplayName("Вход через кнопку 'Войти в аккаунт' на главной")
     @Story("Основной сценарий входа")
-    @Description("Проверка входа через основную кнопку входа на главной странице")
+    @Description("Проверка входа через основную кнопку 'Войти в аккаунт' на главной странице") // ИЗМЕНЕНО: добавлен @Description
     @Severity(SeverityLevel.BLOCKER)
     public void testLoginViaMainPageLoginButton() {
         MainPage mainPage = new MainPage(driver);
@@ -33,6 +33,7 @@ public class LoginTest extends BaseTest {
     @Test
     @DisplayName("Вход через кнопку 'Личный кабинет'")
     @Story("Альтернативные способы входа")
+    @Description("Проверка входа через кнопку 'Личный кабинет' в шапке сайта") // ИЗМЕНЕНО: добавлен @Description
     @Severity(SeverityLevel.CRITICAL)
     public void testLoginViaPersonalAccountButton() {
         MainPage mainPage = new MainPage(driver);
@@ -46,6 +47,7 @@ public class LoginTest extends BaseTest {
     @Test
     @DisplayName("Вход через кнопку в форме регистрации")
     @Story("Альтернативные способы входа")
+    @Description("Проверка входа через ссылку 'Войти' на странице регистрации") // ИЗМЕНЕНО: добавлен @Description
     @Severity(SeverityLevel.NORMAL)
     public void testLoginViaRegistrationForm() {
         MainPage mainPage = new MainPage(driver);
@@ -67,6 +69,7 @@ public class LoginTest extends BaseTest {
     @Test
     @DisplayName("Вход через кнопку в форме восстановления пароля")
     @Story("Альтернативные способы входа")
+    @Description("Проверка входа через ссылку 'Войти' на странице восстановления пароля") // ИЗМЕНЕНО: добавлен @Description
     @Severity(SeverityLevel.NORMAL)
     public void testLoginViaPasswordRecoveryForm() {
         MainPage mainPage = new MainPage(driver);
