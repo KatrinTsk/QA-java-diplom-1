@@ -9,13 +9,13 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.BeforeClass;
 
-import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.*;
 
 public class BaseTest {
     protected static RequestSpecification requestSpec;
 
     @BeforeClass
-    public static void setUp() {
+    public static void globalSetUp() {
         RestAssured.baseURI = "https://stellarburgers.nomoreparties.site/api";
 
         requestSpec = new RequestSpecBuilder()
@@ -26,14 +26,25 @@ public class BaseTest {
                 .build();
     }
 
+    public static RequestSpecification getRequestSpec() {
+        return requestSpec;
+    }
+
     protected String getAccessToken(String email, String password) {
-        return given()
-                .spec(requestSpec)
-                .body(String.format("{\"email\": \"%s\", \"password\": \"%s\"}", email, password))
-                .when()
-                .post("/auth/login")
+        models.LoginRequest loginRequest = new models.LoginRequest(email, password);
+
+        return api.clients.AuthApiClient.login(loginRequest)
                 .then()
+                .statusCode(SC_OK)
                 .extract()
                 .path("accessToken");
+    }
+
+    protected void deleteUser(String accessToken) {
+        if (accessToken != null) {
+            api.clients.UserApiClient.deleteUser(accessToken)
+                    .then()
+                    .statusCode(SC_ACCEPTED);
+        }
     }
 }

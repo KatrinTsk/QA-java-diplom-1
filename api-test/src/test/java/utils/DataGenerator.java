@@ -1,17 +1,20 @@
 package utils;
 
-import java.util.concurrent.ThreadLocalRandom;
+import net.datafaker.Faker;
+import java.util.Locale;
 
 public class DataGenerator {
+    private static final Faker faker = new Faker(new Locale("ru"));
+
     public static String generateEmail() {
-        return "test" + System.currentTimeMillis() + "@example.com";
+        return faker.internet().emailAddress();
     }
 
     public static String generatePassword() {
-        return "password" + ThreadLocalRandom.current().nextInt(1000, 9999);
+        return faker.internet().password(8, 16, true, true, true);
     }
 
     public static String generateName() {
-        return "User" + ThreadLocalRandom.current().nextInt(100, 999);
+        return faker.name().firstName();
     }
 }
