@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import pages.LoginPage;
 import pages.MainPage;
@@ -10,7 +11,9 @@ public class BaseTest {
     protected String email;
     protected String password;
     protected WebDriver driver;
-    public void GenerateUser () {
+
+    @Step("Генерация тестового пользователя")
+    public void GenerateUser() {
         MainPage mainPage = new MainPage(driver);
         mainPage.clickLoginButton();
 

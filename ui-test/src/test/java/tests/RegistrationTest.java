@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
 public class RegistrationTest extends BaseTest {
 
     @Before
+    @Step("Инициализация драйвера и открытие главной страницы")
     public void setUp() {
         driver = WebDriverFactory.createDriver();
         driver.get("https://stellarburgers.nomoreparties.site/");
@@ -75,7 +76,7 @@ public class RegistrationTest extends BaseTest {
         performRegistrationTest("abcde", false);
     }
 
-    @Step("Выполнение теста регистрации с паролем: {password}")
+    @Step("Выполнение теста регистрации с паролем: {password} (ожидаемый успех: {shouldSucceed})")
     private void performRegistrationTest(String password, boolean shouldSucceed) {
         MainPage mainPage = new MainPage(driver);
         mainPage.clickLoginButton();
@@ -105,7 +106,7 @@ public class RegistrationTest extends BaseTest {
         }
     }
 
-    @Step("Проверка успешной регистрации")
+    @Step("Проверка успешной регистрации (переход на страницу входа)")
     private void checkSuccessfulRegistration(LoginPage loginPage) {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.urlContains("/login"));
@@ -113,7 +114,7 @@ public class RegistrationTest extends BaseTest {
         assertTrue(loginPage.isLoginPageDisplayed());
     }
 
-    @Step("Проверка неудачной регистрации")
+    @Step("Проверка неудачной регистрации (ожидаемая ошибка валидации пароля)")
     private void checkFailedRegistration(RegistrationPage registrationPage) {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOfElementLocated(
@@ -145,6 +146,7 @@ public class RegistrationTest extends BaseTest {
     }
 
     @After
+    @Step("Закрытие драйвера")
     public void tearDown() {
         if (driver != null) {
             driver.quit();
