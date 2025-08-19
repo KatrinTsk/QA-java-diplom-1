@@ -1,4 +1,3 @@
-// BaseTestWithoutAuth.java
 package tests;
 
 import io.qameta.allure.Step;
@@ -6,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import utils.WebDriverFactory;
+import constants.Endpoints;
 
 public class BaseTestWithoutAuth {
     protected WebDriver driver;
@@ -15,7 +15,7 @@ public class BaseTestWithoutAuth {
     public void setUp() {
         this.driver = WebDriverFactory.createDriver();
         driver.manage().deleteAllCookies();
-        driver.get("https://stellarburgers.nomoreparties.site/");
+        driver.get(Endpoints.HOME_PAGE);
     }
 
     @After

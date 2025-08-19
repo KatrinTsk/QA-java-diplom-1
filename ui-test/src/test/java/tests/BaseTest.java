@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import utils.WebDriverFactory;
+import constants.Endpoints;
 
 public class BaseTest {
     protected WebDriver driver;
@@ -18,19 +19,16 @@ public class BaseTest {
     @Before
     @Step("Создание тестового пользователя через API")
     public void createTestUser() {
-        // Генерация уникальных данных
         long timestamp = System.currentTimeMillis();
         this.name = "User_" + timestamp;
         this.email = "user_" + timestamp + "@example.com";
         this.password = "password_" + timestamp;
 
-        // Создание пользователя через API
         Response response = UserApiClient.createUser(email, password, name);
         this.accessToken = response.then().extract().path("accessToken");
 
-        // Инициализация драйвера
         this.driver = WebDriverFactory.createDriver();
-        driver.get("https://stellarburgers.nomoreparties.site/");
+        driver.get(Endpoints.HOME_PAGE);
     }
 
     @After
