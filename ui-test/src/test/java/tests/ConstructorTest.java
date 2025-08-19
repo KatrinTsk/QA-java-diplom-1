@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import pages.MainPage;
 import io.qameta.allure.Step;
-import io.qameta.allure.Description; // ИЗМЕНЕНО: добавлен импорт
+import io.qameta.allure.Description;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,23 +22,25 @@ public class ConstructorTest extends BaseTestWithoutAuth {
 
     @Test
     @DisplayName("Проверка перехода к разделу 'Булки'")
-    @Description("Проверка корректной работы навигации: Булки → Соусы → Булки") // ИЗМЕНЕНО: добавлен @Description
+    @Description("Проверка корректной работы навигации: Булки → Соусы → Булки")
     public void testNavigateToBunsSection() {
         // Проверяем, что изначально выбран раздел "Булки"
         assertEquals("Булки", mainPage.getSelectedSectionText().trim());
 
         // Переходим в "Соусы" и проверяем
-        navigateToSaucesSection(mainPage);
+        mainPage.clickSaucesSection();
+        waitForSectionToLoad("Соусы");
         assertEquals("Соусы", mainPage.getSelectedSectionText().trim());
 
         // Возвращаемся в "Булки" и проверяем
-        navigateToBunsSection(mainPage);
+        mainPage.clickBunsSection();
+        waitForSectionToLoad("Булки");
         assertEquals("Булки", mainPage.getSelectedSectionText().trim());
     }
 
     @Test
     @DisplayName("Переход к разделу 'Соусы'")
-    @Description("Проверка перехода из раздела 'Булки' в раздел 'Соусы'") // ИЗМЕНЕНО: добавлен @Description
+    @Description("Проверка перехода из раздела 'Булки' в раздел 'Соусы'")
     public void testNavigateToSaucesSection() {
         // Проверка начального состояния
         assertEquals("Булки", mainPage.getSelectedSectionText());
@@ -54,29 +56,13 @@ public class ConstructorTest extends BaseTestWithoutAuth {
 
     @Test
     @DisplayName("Переход к разделу 'Начинки'")
-    @Description("Проверка перехода из раздела 'Булки' в раздел 'Начинки'") // ИЗМЕНЕНО: добавлен @Description
+    @Description("Проверка перехода из раздела 'Булки' в раздел 'Начинки'")
     public void testNavigateToFillingsSection() {
-        navigateToFillingsSection(mainPage);
+        mainPage.clickFillingsSection();
+        waitForSectionToLoad("Начинки");
         verifySectionText(mainPage, "Начинки");
     }
 
-    @Step("Переход в раздел 'Соусы'")
-    private void navigateToSaucesSection(MainPage mainPage) {
-        mainPage.clickSaucesSection();
-        waitForSectionToLoad("Соусы");
-    }
-
-    @Step("Переход в раздел 'Булки'")
-    private void navigateToBunsSection(MainPage mainPage) {
-        mainPage.clickBunsSection();
-        waitForSectionToLoad("Булки");
-    }
-
-    @Step("Переход в раздел 'Начинки'")
-    private void navigateToFillingsSection(MainPage mainPage) {
-        mainPage.clickFillingsSection();
-        waitForSectionToLoad("Начинки");
-    }
 
     @Step("Ожидание загрузки раздела: {sectionName}")
     private void waitForSectionToLoad(String sectionName) {
