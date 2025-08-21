@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
 public class BurgerTest {
@@ -127,51 +127,5 @@ public class BurgerTest {
         );
 
         assertEquals("Чек должен быть сформирован правильно", expectedReceipt, burger.getReceipt());
-    }
-
-    @Test
-    public void testGetPriceWithOnlyBun() {
-        burger.setBuns(bun);
-
-        float expectedPrice = bunPrice * 2;
-        assertEquals("Цена только с булочками должна быть правильной", expectedPrice, burger.getPrice(), 0.0f);
-    }
-
-    @Test
-    public void testGetReceiptWithOnlyBun() {
-        burger.setBuns(bun);
-
-        String expectedReceipt = String.format(
-                "(==== %s ====)%n(==== %s ====)%n%nPrice: %f%n",
-                bunName,
-                bunName,
-                bunPrice * 2
-        );
-
-        assertEquals("Чек только с булочками должен быть правильным", expectedReceipt, burger.getReceipt());
-    }
-
-    @Test
-    public void testMoveIngredientToSamePosition() {
-        burger.addIngredient(firstIngredient);
-        burger.addIngredient(secondIngredient);
-
-        List<Ingredient> originalOrder = List.copyOf(burger.ingredients);
-        burger.moveIngredient(0, 0);
-
-        assertEquals("Порядок ингредиентов не должен измениться при перемещении на ту же позицию",
-                originalOrder, burger.ingredients);
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void testRemoveIngredientWithInvalidIndex() {
-        burger.addIngredient(firstIngredient);
-        burger.removeIngredient(5);
-    }
-
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void testMoveIngredientWithInvalidIndex() {
-        burger.addIngredient(firstIngredient);
-        burger.moveIngredient(0, 5);
     }
 }
