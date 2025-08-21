@@ -9,7 +9,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -74,31 +73,46 @@ public class BurgerTest {
     }
 
     @Test
-    public void testAddIngredient() {
+    public void testAddIngredientIncreasesSize() {
         burger.addIngredient(firstIngredient);
         assertEquals("Количество ингредиентов должно увеличиться", 1, burger.ingredients.size());
+    }
+
+    @Test
+    public void testAddIngredientAddsCorrectIngredient() {
+        burger.addIngredient(firstIngredient);
         assertEquals("Добавленный ингредиент должен соответствовать", firstIngredient, burger.ingredients.get(0));
     }
 
     @Test
-    public void testRemoveIngredient() {
+    public void testRemoveIngredientDecreasesSize() {
         burger.addIngredient(firstIngredient);
         burger.addIngredient(secondIngredient);
-
         burger.removeIngredient(0);
-
         assertEquals("Количество ингредиентов должно уменьшиться", 1, burger.ingredients.size());
+    }
+
+    @Test
+    public void testRemoveIngredientRemovesCorrectIngredient() {
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+        burger.removeIngredient(0);
         assertEquals("Оставшийся ингредиент должен быть правильным", secondIngredient, burger.ingredients.get(0));
     }
 
     @Test
-    public void testMoveIngredientFromFirstToSecondPosition() {
+    public void testMoveIngredientChangesFirstPosition() {
         burger.addIngredient(firstIngredient);
         burger.addIngredient(secondIngredient);
-
         burger.moveIngredient(0, 1);
-
         assertEquals("Первый ингредиент должен измениться", secondIngredient, burger.ingredients.get(0));
+    }
+
+    @Test
+    public void testMoveIngredientChangesSecondPosition() {
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
+        burger.moveIngredient(0, 1);
         assertEquals("Второй ингредиент должен измениться", firstIngredient, burger.ingredients.get(1));
     }
 
