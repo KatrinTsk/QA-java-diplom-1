@@ -25,7 +25,6 @@ public class BaseTest {
 
         this.name = faker.name().firstName();
         this.email = faker.internet().emailAddress();
-
         this.password = faker.internet().password(10, 16, true, true, true);
 
         Response response = UserApiClient.createUser(email, password, name);
