@@ -1,6 +1,7 @@
 package api;
 
 import api.clients.OrderApiClient;
+import api.clients.UserApiClient;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import models.OrderRequest;
@@ -23,29 +24,15 @@ public class OrderApiTest extends BaseTest {
     private final String[] wrongIngredients = {"wrongIngredient1", "wrongIngredient2"};
 
     @Before
-    public void setUpTestUser() {
+    public void setUp() {
         testUser = new User(
                 DataGenerator.generateEmail(),
                 DataGenerator.generatePassword(),
                 DataGenerator.generateName()
         );
 
-        // Регистрируем пользователя перед тестами
-        api.clients.UserApiClient.createUser(testUser)
-                .then()
-                .statusCode(SC_OK);
-
+        UserApiClient.createUser(testUser).then().statusCode(SC_OK);
         testAccessToken = getAccessToken(testUser.getEmail(), testUser.getPassword());
-    }
-
-    protected String getAccessToken(String email, String password) {
-        models.LoginRequest loginRequest = new models.LoginRequest(email, password);
-
-        return api.clients.AuthApiClient.login(loginRequest)
-                .then()
-                .statusCode(SC_OK)
-                .extract()
-                .path("accessToken");
     }
 
     @Test

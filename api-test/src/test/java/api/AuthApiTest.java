@@ -1,5 +1,7 @@
 package api;
 
+import api.clients.AuthApiClient;
+import api.clients.UserApiClient;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import models.LoginRequest;
@@ -17,29 +19,15 @@ public class AuthApiTest extends BaseTest {
     private String testAccessToken;
 
     @Before
-    public void setUpTestUser() {
+    public void setUp() {
         testUser = new User(
                 DataGenerator.generateEmail(),
                 DataGenerator.generatePassword(),
                 DataGenerator.generateName()
         );
 
-        // Регистрируем пользователя перед тестами
-        api.clients.UserApiClient.createUser(testUser)
-                .then()
-                .statusCode(SC_OK);
-
+        UserApiClient.createUser(testUser).then().statusCode(SC_OK);
         testAccessToken = getAccessToken(testUser.getEmail(), testUser.getPassword());
-    }
-
-    protected String getAccessToken(String email, String password) {
-        LoginRequest loginRequest = new LoginRequest(email, password);
-
-        return api.clients.AuthApiClient.login(loginRequest)
-                .then()
-                .statusCode(SC_OK)
-                .extract()
-                .path("accessToken");
     }
 
     @Test
@@ -48,7 +36,7 @@ public class AuthApiTest extends BaseTest {
     public void testSuccessfulLogin() {
         LoginRequest loginRequest = new LoginRequest(testUser.getEmail(), testUser.getPassword());
 
-        api.clients.AuthApiClient.login(loginRequest)
+        AuthApiClient.login(loginRequest)
                 .then()
                 .statusCode(SC_OK)
                 .body("success", is(true))
@@ -60,12 +48,9 @@ public class AuthApiTest extends BaseTest {
     @DisplayName("Вход с неверным email")
     @Description("Тест проверяет ошибку при входе с неверным email")
     public void testLoginWithInvalidEmail() {
-        LoginRequest loginRequest = new LoginRequest(
-                "wrong_" + testUser.getEmail(),
-                testUser.getPassword()
-        );
+        LoginRequest loginRequest = new LoginRequest("wrong_" + testUser.getEmail(), testUser.getPassword());
 
-        api.clients.AuthApiClient.login(loginRequest)
+        AuthApiClient.login(loginRequest)
                 .then()
                 .statusCode(SC_UNAUTHORIZED)
                 .body("success", is(false))
@@ -76,12 +61,9 @@ public class AuthApiTest extends BaseTest {
     @DisplayName("Вход с неверным паролем")
     @Description("Тест проверяет ошибку при входе с неверным паролем")
     public void testLoginWithInvalidPassword() {
-        LoginRequest loginRequest = new LoginRequest(
-                testUser.getEmail(),
-                "wrong_" + testUser.getPassword()
-        );
+        LoginRequest loginRequest = new LoginRequest(testUser.getEmail(), "wrong_" + testUser.getPassword());
 
-        api.clients.AuthApiClient.login(loginRequest)
+        AuthApiClient.login(loginRequest)
                 .then()
                 .statusCode(SC_UNAUTHORIZED)
                 .body("success", is(false))

@@ -1,6 +1,7 @@
 package api.clients;
 
 import api.BaseTest;
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import models.OrderRequest;
 
@@ -8,6 +9,7 @@ import static io.restassured.RestAssured.given;
 
 public class OrderApiClient {
 
+    @Step("Создание заказа")
     public static Response createOrder(OrderRequest orderRequest, String accessToken) {
         if (accessToken != null) {
             return given()

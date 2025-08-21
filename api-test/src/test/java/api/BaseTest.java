@@ -1,5 +1,7 @@
 package api;
 
+import api.clients.AuthApiClient;
+import api.clients.UserApiClient;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -7,6 +9,7 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import models.LoginRequest;
 import org.junit.BeforeClass;
 
 import static org.apache.http.HttpStatus.*;
@@ -31,9 +34,9 @@ public class BaseTest {
     }
 
     protected String getAccessToken(String email, String password) {
-        models.LoginRequest loginRequest = new models.LoginRequest(email, password);
+        LoginRequest loginRequest = new LoginRequest(email, password);
 
-        return api.clients.AuthApiClient.login(loginRequest)
+        return AuthApiClient.login(loginRequest)
                 .then()
                 .statusCode(SC_OK)
                 .extract()
@@ -42,9 +45,7 @@ public class BaseTest {
 
     protected void deleteUser(String accessToken) {
         if (accessToken != null) {
-            api.clients.UserApiClient.deleteUser(accessToken)
-                    .then()
-                    .statusCode(SC_ACCEPTED);
+            UserApiClient.deleteUser(accessToken).then().statusCode(SC_ACCEPTED);
         }
     }
 }

@@ -8,22 +8,12 @@ import org.junit.After;
 import org.junit.Test;
 import utils.DataGenerator;
 
-import static org.apache.http.HttpStatus.*;
+import static org.apache.http.HttpStatus.SC_FORBIDDEN;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.*;
 
 public class UserApiTest extends BaseTest {
     private User testUser;
-    private String testAccessToken;
-
-    protected String getAccessToken(String email, String password) {
-        models.LoginRequest loginRequest = new models.LoginRequest(email, password);
-
-        return api.clients.AuthApiClient.login(loginRequest)
-                .then()
-                .statusCode(SC_OK)
-                .extract()
-                .path("accessToken");
-    }
 
     @Test
     @DisplayName("Создание уникального пользователя")
@@ -41,8 +31,6 @@ public class UserApiTest extends BaseTest {
                 .body("success", is(true))
                 .body("accessToken", notNullValue())
                 .body("refreshToken", notNullValue());
-
-        testAccessToken = getAccessToken(testUser.getEmail(), testUser.getPassword());
     }
 
     @Test
@@ -55,30 +43,19 @@ public class UserApiTest extends BaseTest {
                 DataGenerator.generateName()
         );
 
-        // Сначала создаем пользователя
-        UserApiClient.createUser(testUser)
-                .then()
-                .statusCode(SC_OK);
-
-        // Пытаемся создать такого же
+        UserApiClient.createUser(testUser).then().statusCode(SC_OK);
         UserApiClient.createUser(testUser)
                 .then()
                 .statusCode(SC_FORBIDDEN)
                 .body("success", is(false))
                 .body("message", equalTo("User already exists"));
-
-        testAccessToken = getAccessToken(testUser.getEmail(), testUser.getPassword());
     }
 
     @Test
     @DisplayName("Создание пользователя без email")
     @Description("Тест проверяет ошибку при создании пользователя без обязательного поля email")
     public void testCreateUserWithoutEmail() {
-        testUser = new User(
-                null,
-                DataGenerator.generatePassword(),
-                DataGenerator.generateName()
-        );
+        testUser = new User(null, DataGenerator.generatePassword(), DataGenerator.generateName());
 
         UserApiClient.createUser(testUser)
                 .then()
@@ -91,11 +68,7 @@ public class UserApiTest extends BaseTest {
     @DisplayName("Создание пользователя без пароля")
     @Description("Тест проверяет ошибку при создании пользователя без обязательного поля password")
     public void testCreateUserWithoutPassword() {
-        testUser = new User(
-                DataGenerator.generateEmail(),
-                null,
-                DataGenerator.generateName()
-        );
+        testUser = new User(DataGenerator.generateEmail(), null, DataGenerator.generateName());
 
         UserApiClient.createUser(testUser)
                 .then()
@@ -106,13 +79,9 @@ public class UserApiTest extends BaseTest {
 
     @Test
     @DisplayName("Создание пользователя без имени")
-    @Description("Тест проверяет ошибку при создании пользователя без обязательного поле name")
+    @Description("Тест проверяет ошибку при создании пользователя без обязательного поля name")
     public void testCreateUserWithoutName() {
-        testUser = new User(
-                DataGenerator.generateEmail(),
-                DataGenerator.generatePassword(),
-                null
-        );
+        testUser = new User(DataGenerator.generateEmail(), DataGenerator.generatePassword(), null);
 
         UserApiClient.createUser(testUser)
                 .then()
@@ -123,6 +92,13 @@ public class UserApiTest extends BaseTest {
 
     @After
     public void tearDown() {
-        deleteUser(testAccessToken);
+        if (testUser != null && testUser.getEmail() != null && testUser.getPassword() != null) {
+            try {
+                String token = getAccessToken(testUser.getEmail(), testUser.getPassword());
+                deleteUser(token);
+            } catch (AssertionError e) {
+                // Ожидаемо для тестов с валидацией
+            }
+        }
     }
 }
