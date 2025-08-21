@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -20,22 +21,27 @@ public class RegistrationPage {
         this.driver = driver;
     }
 
+    @Step("Ввести имя: {name}")
     public void setName(String name) {
         driver.findElement(nameInput).sendKeys(name);
     }
 
+    @Step("Ввести email: {email}")
     public void setEmail(String email) {
         driver.findElement(emailInput).sendKeys(email);
     }
 
+    @Step("Ввести пароль")
     public void setPassword(String password) {
         driver.findElement(passwordInput).sendKeys(password);
     }
 
+    @Step("Нажать кнопку 'Зарегистрироваться'")
     public void clickRegisterButton() {
         driver.findElement(registerButton).click();
     }
 
+    @Step("Нажать ссылку 'Войти'")
     public void clickLoginLink() {
         driver.findElement(loginLink).click();
     }

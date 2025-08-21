@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -22,22 +23,27 @@ public class LoginPage {
     }
 
     // Методы взаимодействия с элементами
+    @Step("Ввести email: {email}")
     public void setEmail(String email) {
         driver.findElement(emailInput).sendKeys(email);
     }
 
+    @Step("Ввести пароль")
     public void setPassword(String password) {
         driver.findElement(passwordInput).sendKeys(password);
     }
 
+    @Step("Нажать кнопку 'Войти'")
     public void clickLoginButton() {
         driver.findElement(loginButton).click();
     }
 
+    @Step("Нажать ссылку 'Зарегистрироваться'")
     public void clickRegisterLink() {
         driver.findElement(registerLink).click();
     }
 
+    @Step("Нажать ссылку 'Восстановить пароль'")
     public void clickRecoverPasswordLink() {
         driver.findElement(recoverPasswordLink).click();
     }

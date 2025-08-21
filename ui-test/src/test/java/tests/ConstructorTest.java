@@ -1,11 +1,11 @@
 package tests;
 
 import io.qameta.allure.junit4.DisplayName;
+import io.qameta.allure.Description;
 import org.junit.Before;
 import org.junit.Test;
 import pages.MainPage;
 import io.qameta.allure.Step;
-import io.qameta.allure.Description;
 
 import static org.junit.Assert.assertEquals;
 
@@ -62,7 +62,6 @@ public class ConstructorTest extends BaseTestWithoutAuth {
         waitForSectionToLoad("Начинки");
         verifySectionText(mainPage, "Начинки");
     }
-
 
     @Step("Ожидание загрузки раздела: {sectionName}")
     private void waitForSectionToLoad(String sectionName) {

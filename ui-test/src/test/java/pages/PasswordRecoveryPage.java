@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -12,6 +13,7 @@ public class PasswordRecoveryPage {
         this.driver = driver;
     }
 
+    @Step("Нажать ссылку 'Войти'")
     public void clickLoginLink() {
         driver.findElement(loginLink).click();
     }
