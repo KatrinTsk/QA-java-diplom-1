@@ -1,0 +1,4 @@
+/ui-test/.allure/
+/ui-test/target/
+.idea/
+.allure/
