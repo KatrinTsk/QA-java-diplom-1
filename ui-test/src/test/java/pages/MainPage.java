@@ -1,0 +1,82 @@
+package pages;
+
+import io.qameta.allure.Step;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+
+public class MainPage {
+    private final WebDriver driver;
+
+    // Локаторы элементов
+    private final By loginButton = By.xpath(".//button[contains(@class, 'button_button_type_primary')]");
+    private final By personalAccountButton = By.xpath(".//p[text()='Личный Кабинет']");
+    private final By orderButton = By.xpath(".//button[text()='Оформить заказ']");
+    private final By bunsSection = By.xpath(".//span[text()='Булки']/..");
+    private final By saucesSection = By.xpath(".//span[text()='Соусы']/..");
+    private final By fillingsSection = By.xpath(".//span[text()='Начинки']/..");
+    private final By selectedSection = By.xpath(".//div[contains(@class, 'tab_tab_type_current')]");
+    private final By constructorHeader = By.xpath(".//h1[text()='Соберите бургер']");
+
+    public MainPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    // Методы взаимодействия с элементами
+    public By getSelectedSectionLocator() {
+        return selectedSection;
+    }
+
+    @Step("Нажать кнопку 'Войти в аккаунт'")
+    public void clickLoginButton() {
+        driver.findElement(loginButton).click();
+    }
+
+    @Step("Нажать кнопку 'Личный Кабинет'")
+    public void clickPersonalAccountButton() {
+        driver.findElement(personalAccountButton).click();
+    }
+
+    @Step("Нажать раздел 'Булки'")
+    public void clickBunsSection() {
+        driver.findElement(bunsSection).click();
+    }
+
+    @Step("Нажать раздел 'Соусы'")
+    public void clickSaucesSection() {
+        driver.findElement(saucesSection).click();
+    }
+
+    @Step("Нажать раздел 'Начинки'")
+    public void clickFillingsSection() {
+        driver.findElement(fillingsSection).click();
+    }
+
+    // Методы проверок состояния
+    public boolean isOrderButtonDisplayed() {
+        try {
+            return driver.findElement(orderButton).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public String getSelectedSectionText() {
+        waitForConstructorLoaded();
+        return driver.findElement(selectedSection).getText();
+    }
+
+    public void waitForConstructorLoaded() {
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOfElementLocated(selectedSection));
+    }
+
+    public void waitForSectionLoaded(String sectionName) {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.textToBePresentInElementLocated(
+                        selectedSection, sectionName));
+    }
+}
